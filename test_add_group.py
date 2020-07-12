@@ -4,10 +4,14 @@ import unittest
 from selenium import webdriver
 from selenium.common.exceptions import NoAlertPresentException
 from selenium.common.exceptions import NoSuchElementException
+import configparser
 
 
 class TestAddGroup(unittest.TestCase):
     def setUp(self):
+        config = configparser.ConfigParser()
+        config.read("setup.ini")
+        self.base_url = config['DEFAULT']['url']
         self.wd = webdriver.Firefox()
         self.wd.implicitly_wait(30)
 
@@ -48,7 +52,7 @@ class TestAddGroup(unittest.TestCase):
         wd.find_element_by_xpath("//input[@value='Login']").click()
 
     def open_home_page(self, wd):
-        wd.get("http://localhost/index.php")
+        wd.get(self.base_url)
 
     def is_element_present(self, how, what):
         try:
