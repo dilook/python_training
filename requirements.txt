@@ -1,0 +1,4 @@
+configparser==5.0.0
+pytest==5.4.3
+selenium==3.141.0
+webdriver-manager==3.2.1
