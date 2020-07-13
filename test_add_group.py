@@ -3,6 +3,7 @@ import configparser
 import unittest
 
 from selenium import webdriver
+from webdriver_manager.firefox import GeckoDriverManager
 from selenium.common.exceptions import NoAlertPresentException
 from selenium.common.exceptions import NoSuchElementException
 
@@ -14,7 +15,7 @@ class TestAddGroup(unittest.TestCase):
         config = configparser.ConfigParser()
         config.read("setup.ini")
         self.base_url = config['DEFAULT']['url']
-        self.wd = webdriver.Firefox()
+        self.wd = webdriver.Firefox(executable_path=GeckoDriverManager().install())
         self.wd.implicitly_wait(30)
 
     def test_add_group(self):
