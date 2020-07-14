@@ -8,7 +8,7 @@ from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.support.ui import Select
 from webdriver_manager.firefox import GeckoDriverManager
 
-from contact import Contact, ContactInfo, BDay
+from contact import Contact
 
 
 class TestAddGroup(unittest.TestCase):
@@ -23,10 +23,13 @@ class TestAddGroup(unittest.TestCase):
         wd = self.wd
         self.open_home_page(wd)
         self.login(wd, username="admin", password="secret")
-        b_day = BDay(day="1", month="April", year="1978")
-        dia = Contact(first_name="Dia", middle_name="Korret", last_name="Medercy", b_day=b_day)
-        dia.add_contact_info(ContactInfo(phone="+45135464151", email="test@test.com"))
-        self.add_new_contact(wd, dia)
+        new_contact = Contact(first_name="Dia", middle_name="Korret", last_name="Medercy", nick="dia",
+                              day="1", month="April", year="1978",
+                              work_phone="45-49-45", mobile_phone="+45135464151", email="test@test.com",
+                              company="Google", address="25 Korovina str", homepage="humster.com",
+                              group="[none]", title="Dia"
+                              )
+        self.add_new_contact(wd, new_contact)
         self.open_home_page(wd)
         self.logout(wd)
 
@@ -43,26 +46,26 @@ class TestAddGroup(unittest.TestCase):
         wd.find_element_by_name("lastname").clear()
         wd.find_element_by_name("lastname").send_keys(contact.last_name)
         wd.find_element_by_name("nickname").clear()
-        wd.find_element_by_name("nickname").send_keys("mkdia")
+        wd.find_element_by_name("nickname").send_keys(contact.nick)
         wd.find_element_by_name("title").clear()
-        wd.find_element_by_name("title").send_keys("Dia M")
+        wd.find_element_by_name("title").send_keys(contact.title)
         wd.find_element_by_name("company").clear()
-        wd.find_element_by_name("company").send_keys("Google")
+        wd.find_element_by_name("company").send_keys(contact.company)
         wd.find_element_by_name("address").clear()
-        wd.find_element_by_name("address").send_keys("Street of Simles 23,")
+        wd.find_element_by_name("address").send_keys(contact.address)
         wd.find_element_by_name("mobile").clear()
-        wd.find_element_by_name("mobile").send_keys("m_phone")
+        wd.find_element_by_name("mobile").send_keys(contact.mobile_phone)
         wd.find_element_by_name("work").clear()
-        wd.find_element_by_name("work").send_keys(contact.contact_info.phone)
+        wd.find_element_by_name("work").send_keys(contact.work_phone)
         wd.find_element_by_name("email").clear()
-        wd.find_element_by_name("email").send_keys(contact.contact_info.email)
+        wd.find_element_by_name("email").send_keys(contact.email)
         wd.find_element_by_name("homepage").clear()
-        wd.find_element_by_name("homepage").send_keys("none")
-        Select(wd.find_element_by_name("bday")).select_by_visible_text(contact.b_day.day)
-        Select(wd.find_element_by_name("bmonth")).select_by_visible_text(contact.b_day.month)
+        wd.find_element_by_name("homepage").send_keys(contact.homepage)
+        Select(wd.find_element_by_name("bday")).select_by_visible_text(contact.day)
+        Select(wd.find_element_by_name("bmonth")).select_by_visible_text(contact.month)
         wd.find_element_by_name("byear").clear()
-        wd.find_element_by_name("byear").send_keys(contact.b_day.year)
-        Select(wd.find_element_by_name("new_group")).select_by_visible_text("[none]")
+        wd.find_element_by_name("byear").send_keys(contact.year)
+        Select(wd.find_element_by_name("new_group")).select_by_visible_text(contact.group)
         wd.find_element_by_css_selector("[value=Enter]").click()
 
     def login(self, wd, username, password):
