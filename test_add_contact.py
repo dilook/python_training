@@ -21,7 +21,6 @@ class TestAddGroup(unittest.TestCase):
 
     def test_add_contact(self):
         wd = self.wd
-        self.open_home_page(wd)
         self.login(wd, username="admin", password="secret")
         new_contact = Contact(first_name="Dia", middle_name="Korret", last_name="Medercy", nick="dia",
                               day="1", month="April", year="1978",
@@ -30,7 +29,6 @@ class TestAddGroup(unittest.TestCase):
                               group="[none]", title="Dia"
                               )
         self.add_new_contact(wd, new_contact)
-        self.open_home_page(wd)
         self.logout(wd)
 
     def logout(self, wd):
@@ -68,7 +66,10 @@ class TestAddGroup(unittest.TestCase):
         Select(wd.find_element_by_name("new_group")).select_by_visible_text(contact.group)
         wd.find_element_by_css_selector("[value=Enter]").click()
 
+        self.open_home_page(wd)
+
     def login(self, wd, username, password):
+        self.open_home_page(wd)
         wd.find_element_by_name("user").clear()
         wd.find_element_by_name("user").send_keys(username)
         wd.find_element_by_name("pass").clear()
