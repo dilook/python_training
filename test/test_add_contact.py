@@ -7,7 +7,7 @@ from model.contact import Contact
 
 @pytest.fixture
 def app(request):
-    fixture = Application()
+    fixture = Application(request.fspath.join('..').join('..'))
     request.addfinalizer(fixture.destroy)
     return fixture
 

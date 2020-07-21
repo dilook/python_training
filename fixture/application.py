@@ -9,11 +9,11 @@ from fixture.session import SessionHelper
 
 
 class Application:
-    def __init__(self):
+    def __init__(self, root_path):
         self.wd = webdriver.Firefox(executable_path=GeckoDriverManager().install())
         self.wd.implicitly_wait(60)
         config = configparser.ConfigParser()
-        config.read("../setup.ini")
+        config.read(root_path.join('setup.ini'))
         self.base_url = config['DEFAULT']['url']
         self.session = SessionHelper(self)
         self.group = GroupHelper(self)
