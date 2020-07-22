@@ -1,15 +1,6 @@
 # -*- coding: utf-8 -*-
-import pytest
 
-from fixture.application import Application
 from model.group import Group
-
-
-@pytest.fixture
-def app(request):
-    fixture = Application(request.fspath.join('..').join('..'))
-    request.addfinalizer(fixture.destroy)
-    return fixture
 
 
 def test_add_group(app):
