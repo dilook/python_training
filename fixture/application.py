@@ -9,7 +9,6 @@ from fixture.session import SessionHelper
 class Application:
     def __init__(self, base_url):
         self.wd = webdriver.Chrome(ChromeDriverManager().install())
-        self.wd.implicitly_wait(4)
         self.base_url = base_url
         self.session = SessionHelper(self)
         self.group = GroupHelper(self)
@@ -17,7 +16,8 @@ class Application:
 
     def open_home_page(self):
         wd = self.wd
-        wd.get(self.base_url)
+        if not wd.current_url.endswith("index.php"):
+            wd.get(self.base_url)
 
     def destroy(self):
         self.wd.quit()

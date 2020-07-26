@@ -10,7 +10,6 @@ class ContactHelper:
         wd.find_element_by_link_text("add new").click()
         self.__set_field_if_possible__(contact)
         wd.find_element_by_css_selector("[value=Enter]").click()
-
         self.app.open_home_page()
 
     def delete_first_contact(self):
