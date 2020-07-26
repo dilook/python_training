@@ -9,7 +9,7 @@ from fixture.session import SessionHelper
 class Application:
     def __init__(self, base_url):
         self.wd = webdriver.Chrome(ChromeDriverManager().install())
-        self.wd.implicitly_wait(5)
+        self.wd.implicitly_wait(4)
         self.base_url = base_url
         self.session = SessionHelper(self)
         self.group = GroupHelper(self)
