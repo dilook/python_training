@@ -10,7 +10,9 @@ class GroupHelper:
         wd = self.app.wd
         self.open_groups_page()
         wd.find_element_by_name("new").click()
-        self.__set_field_if_possible__(group)
+        self.set_field("group_name", group.name)
+        self.set_field("group_footer", group.footer)
+        self.set_field("group_header", group.header)
         wd.find_element_by_name("submit").click()
         self.return_to_groups_page()
 
@@ -34,16 +36,17 @@ class GroupHelper:
         self.open_groups_page()
         wd.find_element_by_name("selected[]").click()
         wd.find_element_by_name("edit").click()
-        self.__set_field_if_possible__(group)
+        self.set_field("group_name", group.name)
+        self.set_field("group_footer", group.footer)
+        self.set_field("group_header", group.header)
         wd.find_element_by_name("update").click()
         self.return_to_groups_page()
 
-    def __set_field_if_possible__(self, obj):
+    def set_field(self, name, value):
         wd = self.app.wd
-        for attr, value in obj.__dict__.items():
-            if value is not None:
-                wd.find_element_by_name(f"group_{attr}").clear()
-                wd.find_element_by_name(f"group_{attr}").send_keys(value)
+        if value is not None:
+            wd.find_element_by_name(name).clear()
+            wd.find_element_by_name(name).send_keys(value)
 
     def count(self):
         wd = self.app.wd
