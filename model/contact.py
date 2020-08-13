@@ -5,7 +5,11 @@ class Contact:
 
     def __init__(self, first_name=None, middle_name=None, last_name=None, nick=None, mobile_phone=None, work_phone=None,
                  email=None, day=None, month=None, year=None, company=None, address=None, homepage=None, group=None,
-                 title=None, id=None, all_phones=None, home_phone=None, secondary_phone=None):
+                 title=None, id=None, all_phones=None, home_phone=None, secondary_phone=None, email2=None, email3=None,
+                 all_emails=None):
+        self.all_emails = all_emails
+        self.email3 = email3
+        self.email2 = email2
         self.secondary_phone = secondary_phone
         self.home_phone = home_phone
         self.all_phones = all_phones

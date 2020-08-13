@@ -1,3 +1,7 @@
+from typing import List
+
+from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support.select import Select
 
 from model.contact import Contact
@@ -77,15 +81,22 @@ class ContactHelper:
             wd = self.app.wd
             self.app.open_home_page()
             self.contact_cache = []
-            for element in wd.find_elements_by_name("entry"):
-                cells = element.find_elements_by_css_selector("td")
+            ll: List[WebElement] = wd.find_elements_by_name("entry")
+            for element in ll:
+                cells = element.find_elements_by_tag_name("td")
                 lastname = cells[1].text
                 firstname = cells[2].text
                 id = element.find_element_by_name("selected[]").get_attribute("value")
                 all_phones = cells[5].text
+                address = cells[3].text
+                all_emails = cells[4].text
+                try:
+                    homepage = cells[9].find_element_by_tag_name("a").get_attribute("origin")
+                except NoSuchElementException:
+                    homepage = cells[9].text
                 self.contact_cache.append(
-                    Contact(first_name=firstname, last_name=lastname, id=id,
-                            all_phones=all_phones))
+                    Contact(first_name=firstname, last_name=lastname, id=id, all_phones=all_phones,
+                            address=address, all_emails=all_emails, homepage=homepage))
         return list(self.contact_cache)
 
     def open_contact_to_edit_by_index(self, index):
@@ -107,12 +118,17 @@ class ContactHelper:
         self.open_contact_to_edit_by_index(index)
         firstname = wd.find_element_by_name("firstname").get_attribute("value")
         lastname = wd.find_element_by_name("lastname").get_attribute("value")
+        address = wd.find_element_by_name("address").get_attribute("value")
         id = wd.find_element_by_name("id").get_attribute("value")
+        email1 = wd.find_element_by_name("email").get_attribute("value")
+        email2 = wd.find_element_by_name("email2").get_attribute("value")
+        email3 = wd.find_element_by_name("email3").get_attribute("value")
         homephone = wd.find_element_by_name("home").get_attribute("value")
         workphone = wd.find_element_by_name("work").get_attribute("value")
         mobilephone = wd.find_element_by_name("mobile").get_attribute("value")
         secondaryphone = wd.find_element_by_name("phone2").get_attribute("value")
+        homepage = wd.find_element_by_name("homepage").get_attribute("value")
 
-        return Contact(first_name=firstname, last_name=lastname, id=id,
-                       mobile_phone=mobilephone, work_phone=workphone, home_phone=homephone,
-                       secondary_phone=secondaryphone)
+        return Contact(first_name=firstname, last_name=lastname, mobile_phone=mobilephone, work_phone=workphone,
+                       email=email1, address=address, homepage=homepage, id=id, home_phone=homephone,
+                       secondary_phone=secondaryphone, email2=email2, email3=email3)
