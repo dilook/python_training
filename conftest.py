@@ -10,18 +10,17 @@ fixture = None
 
 @pytest.fixture
 def app(request):
-    config = read_config()
-
     global fixture
-    browser = request.config.getoption("--browser")
-    base_url_from_cli = request.config.getoption("--base_url")
-    base_url = config['DEFAULT']['url'] if base_url_from_cli is None else base_url_from_cli
+    browser = get_run_parameter("browser", request)
+    user = get_run_parameter("user", request)
+    password = get_run_parameter("password", request)
+    base_url = get_run_parameter("base_url", request)
     if fixture is None:
         fixture = Application(browser=browser, base_url=base_url)
     else:
         if not fixture.is_valid():
             fixture = Application(browser=browser, base_url=base_url)
-    fixture.session.ensure_login(username="admin", password="secret")
+    fixture.session.ensure_login(username=user, password=password)
     return fixture
 
 
@@ -37,7 +36,9 @@ def stop(request):
 
 def pytest_addoption(parser):
     parser.addoption("--browser", action="store", default="chrome")
-    parser.addoption("--base_url", action="store", default=None)
+    parser.addoption("--base_url", action="store")
+    parser.addoption("--user", action="store")
+    parser.addoption("--password", action="store")
 
 
 def read_config():
@@ -46,3 +47,9 @@ def read_config():
     setup_file = f"{root_path}{os.sep}setup.ini"
     config.read(setup_file)
     return config
+
+
+def get_run_parameter(name, request):
+    config = read_config()
+    param_from_cli = request.config.getoption(f"--{name}")
+    return config['DEFAULT'][name] if param_from_cli is None else param_from_cli
