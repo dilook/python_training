@@ -9,16 +9,17 @@ fixture = None
 
 
 @pytest.fixture
-def app():
+def app(request):
     config = read_config()
     base_url = config['DEFAULT']['url']
 
     global fixture
+    browser = request.config.getoption("--browser")
     if fixture is None:
-        fixture = Application(base_url)
+        fixture = Application(browser=browser, base_url=base_url)
     else:
         if not fixture.is_valid():
-            fixture = Application(base_url)
+            fixture = Application(browser=browser, base_url=base_url)
     fixture.session.ensure_login(username="admin", password="secret")
     return fixture
 
@@ -31,6 +32,10 @@ def stop(request):
 
     request.addfinalizer(fin)
     return fixture
+
+
+def pytest_addoption(parser):
+    parser.addoption("--browser", action="store", default="chrome")
 
 
 def read_config():
