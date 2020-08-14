@@ -11,10 +11,11 @@ fixture = None
 @pytest.fixture
 def app(request):
     config = read_config()
-    base_url = config['DEFAULT']['url']
 
     global fixture
     browser = request.config.getoption("--browser")
+    base_url_from_cli = request.config.getoption("--base_url")
+    base_url = config['DEFAULT']['url'] if base_url_from_cli is None else base_url_from_cli
     if fixture is None:
         fixture = Application(browser=browser, base_url=base_url)
     else:
@@ -36,6 +37,7 @@ def stop(request):
 
 def pytest_addoption(parser):
     parser.addoption("--browser", action="store", default="chrome")
+    parser.addoption("--base_url", action="store", default=None)
 
 
 def read_config():
