@@ -1,4 +1,4 @@
-import configparser
+import json
 import os
 
 import pytest
@@ -6,21 +6,21 @@ import pytest
 from fixture.application import Application
 
 fixture = None
+target = None
 
 
 @pytest.fixture
 def app(request):
     global fixture
-    browser = get_run_parameter("browser", request)
-    user = get_run_parameter("user", request)
-    password = get_run_parameter("password", request)
-    base_url = get_run_parameter("base_url", request)
-    if fixture is None:
-        fixture = Application(browser=browser, base_url=base_url)
-    else:
-        if not fixture.is_valid():
-            fixture = Application(browser=browser, base_url=base_url)
-    fixture.session.ensure_login(username=user, password=password)
+    global target
+    browser = request.config.getoption("--browser")
+    if target is None:
+        file = os.path.join(os.path.dirname(os.path.abspath(__file__)), request.config.getoption("--target"))
+        with open(file) as config_file:
+            target = json.load(config_file)
+    if fixture is None or not fixture.is_valid():
+        fixture = Application(browser=browser, base_url=target["base_url"])
+    fixture.session.ensure_login(username=target["username"], password=target["password"])
     return fixture
 
 
@@ -36,20 +36,4 @@ def stop(request):
 
 def pytest_addoption(parser):
     parser.addoption("--browser", action="store", default="chrome")
-    parser.addoption("--base_url", action="store")
-    parser.addoption("--user", action="store")
-    parser.addoption("--password", action="store")
-
-
-def read_config():
-    root_path = os.path.dirname(__file__)
-    config = configparser.ConfigParser()
-    setup_file = f"{root_path}{os.sep}setup.ini"
-    config.read(setup_file)
-    return config
-
-
-def get_run_parameter(name, request):
-    config = read_config()
-    param_from_cli = request.config.getoption(f"--{name}")
-    return config['DEFAULT'][name] if param_from_cli is None else param_from_cli
+    parser.addoption("--target", action="store", default="target.json")
