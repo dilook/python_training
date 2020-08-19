@@ -82,6 +82,7 @@ class ContactHelper:
             self.app.open_home_page()
             self.contact_cache = []
             ll: List[WebElement] = wd.find_elements_by_name("entry")
+            wd.implicitly_wait(0)
             for element in ll:
                 cells = element.find_elements_by_tag_name("td")
                 lastname = cells[1].text
@@ -97,6 +98,7 @@ class ContactHelper:
                 self.contact_cache.append(
                     Contact(first_name=firstname, last_name=lastname, id=id, all_phones=all_phones,
                             address=address, all_emails=all_emails, homepage=homepage))
+            wd.implicitly_wait(2)
         return list(self.contact_cache)
 
     def open_contact_to_edit_by_index(self, index):
