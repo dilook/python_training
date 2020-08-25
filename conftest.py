@@ -54,7 +54,7 @@ def db(request):
         db_fixture.destroy()
 
     request.addfinalizer(fin)
-    return fixture
+    return db_fixture
 
 
 def pytest_addoption(parser):
