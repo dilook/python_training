@@ -24,5 +24,16 @@ class DbFixture:
                 list_group.append(Group(id=str(id), name=name, header=header, footer=footer))
         return list_group
 
+    def get_contact_list(self):
+        list_contact = []
+        with self.connection.cursor() as cur:
+            cur.execute("SELECT group_id, group_name, group_header, group_footer "
+                        "FROM group_list "
+                        "WHERE deprecated = '0000-00-00 00:00:00'")
+            for row in cur:
+                (id, name, header, footer) = row
+                list_contact.append(Group(id=str(id), name=name, header=header, footer=footer))
+        return list_contact
+
     def destroy(self):
         self.connection.close()
