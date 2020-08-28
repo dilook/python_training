@@ -52,6 +52,15 @@ class ContactHelper:
         self.app.open_home_page()
         self.contact_cache = None
 
+    def modify_contact(self, contact):
+        wd = self.app.wd
+        self.app.open_home_page()
+        self.select_contact_by_id(contact.id)
+        self.fill_form_contact(contact)
+        wd.find_element_by_name("update").click()
+        self.app.open_home_page()
+        self.contact_cache = None
+
     def fill_form_contact(self, contact):
         self.set_field("firstname", contact.firstname)
         self.set_field("lastname", contact.lastname)
@@ -143,3 +152,10 @@ class ContactHelper:
         return Contact(first_name=firstname, last_name=lastname, mobile_phone=mobilephone, work_phone=workphone,
                        email=email1, address=address, homepage=homepage, id=id, home_phone=homephone,
                        secondary_phone=secondaryphone, email2=email2, email3=email3)
+
+    def select_contact_by_id(self, id):
+        wd = self.app.wd
+        row_checkbox = wd.find_element_by_css_selector(f"input[value='{id}']")
+        row_checkbox.click()
+        edit = row_checkbox.find_element_by_xpath("./../..//*[@title='Edit']")
+        edit.click()
