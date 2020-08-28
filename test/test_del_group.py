@@ -1,7 +1,7 @@
 import random
-import re
 
 from model.group import Group
+from utils.db_utils import clean_group_name
 
 
 def test_delete_some_group(app, db, check_ui):
@@ -11,13 +11,8 @@ def test_delete_some_group(app, db, check_ui):
     group = random.choice(old_groups)
     app.group.delete_group_by_id(group.id)
     new_groups = db.get_group_list()
-    assert len(old_groups) - 1 == len(new_groups)
     old_groups.remove(group)
     assert old_groups == new_groups
-
-    def clean(item):
-        return Group(id=item.id, name=re.sub(' +', ' ', item.name.strip()))
-
     if check_ui:
-        assert sorted(map(clean, new_groups), key=Group.get_id_or_max) == sorted(app.group.get_group_list(),
-                                                                                 key=Group.get_id_or_max)
+        assert sorted(map(clean_group_name, new_groups), key=Group.get_id_or_max) == sorted(app.group.get_group_list(),
+                                                                                            key=Group.get_id_or_max)
