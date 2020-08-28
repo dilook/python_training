@@ -171,6 +171,13 @@ class ContactHelper:
         Select(wd.find_element_by_name("to_group")).select_by_value(group.id)
         wd.find_element_by_name("add").click()
 
+    def remove_contact_from_group(self, id, group):
+        wd = self.app.wd
+        self.app.open_home_page()
+        self.filter_by_group(group)
+        self.select_contact_by_id(id)
+        wd.find_element_by_name("remove").click()
+
     def filter_by_group(self, group):
         wd = self.app.wd
         self.app.open_home_page()

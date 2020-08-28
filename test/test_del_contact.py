@@ -21,17 +21,20 @@ def test_delete_some_contact(app, db, check_ui):
 
 
 def test_remove_contact_from_group(app, check_ui, orm):
-    if len(orm.get_group_list()) == 0:
-        app.group.create(Group(name="SuperGroup"))
-    if len(orm.get_contact_list()) == 0:
-        app.contact.add_new(Contact(title="Belong SuperGroup"))
-    contact = random.choice(orm.get_contact_list())
-    group = random.choice(orm.get_group_list())
+    if len(orm.get_contact_list_with_group()) == 0:
+        if len(orm.get_group_list()) == 0:
+            app.group.create(Group(name="SuperGroup"))
+        if len(orm.get_contact_list()) == 0:
+            app.contact.add_new(Contact(title="Belong SuperGroup"))
+        contact = random.choice(orm.get_contact_list())
+        group = random.choice(orm.get_group_list())
+    else:
+        contact = random.choice(orm.get_contact_list_with_group())
+        group = orm.get_groups_of_contact(contact)[0]
     app.contact.add_contact_to_group(contact.id, group)
 
-    contacts = orm.get_contacts_in_group(group)
-    assert contact in contacts
-
-    if True:
+    app.contact.remove_contact_from_group(contact.id, group)
+    assert contact in orm.get_contacts_not_in_group(group)
+    if check_ui:
         app.contact.filter_by_group(group)
-        assert list(filter(lambda c: c.id == contact.id, app.contact.get_contact_list()))[0] in contacts
+        assert contact not in app.contact.get_contact_list()
