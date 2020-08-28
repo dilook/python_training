@@ -27,7 +27,16 @@ class ContactHelper:
         self.app.open_home_page()
         wd.find_elements_by_name("selected[]")[index].click()
         wd.find_element_by_css_selector("[value=Delete]").click()
-        wd.switch_to.alert().accept()
+        wd.switch_to.alert.accept()
+        self.app.open_home_page()
+        self.contact_cache = None
+
+    def delete_contact_by_id(self, id):
+        wd = self.app.wd
+        self.app.open_home_page()
+        wd.find_element_by_css_selector(f"input[value='{id}']").click()
+        wd.find_element_by_css_selector("[value=Delete]").click()
+        wd.switch_to.alert.accept()
         self.app.open_home_page()
         self.contact_cache = None
 
