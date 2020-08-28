@@ -7,8 +7,10 @@ import pytest
 
 from fixture.application import Application
 from fixture.db import DbFixture
+from fixture.orm import ORMFixture
 
 db_fixture = None
+orm_fixture = None
 fixture = None
 target = None
 
@@ -49,14 +51,30 @@ def stop(request):
 def db(request):
     db_config = load_config(request.config.getoption("--target"))["db"]
     global db_fixture
-    db_fixture = DbFixture(host=db_config["host"], port=db_config["port"], db_name=db_config["db_name"],
-                           user=db_config["user"], password=db_config["password"])
+    if db_fixture is None:
+        db_fixture = DbFixture(host=db_config["host"], port=db_config["port"], db_name=db_config["db_name"],
+                               user=db_config["user"], password=db_config["password"])
 
     def fin():
         db_fixture.destroy()
 
     request.addfinalizer(fin)
     return db_fixture
+
+
+@pytest.fixture(scope="session")
+def orm(request):
+    db_config = load_config(request.config.getoption("--target"))["db"]
+    global orm_fixture
+    if orm_fixture is None:
+        orm_fixture = ORMFixture(host=db_config["host"], port=db_config["port"], name=db_config["db_name"],
+                                 user=db_config["user"], password=db_config["password"])
+
+    # def fin():
+    #     orm_fixture.destroy()
+    #
+    # request.addfinalizer(fin)
+    return orm_fixture
 
 
 @pytest.fixture
