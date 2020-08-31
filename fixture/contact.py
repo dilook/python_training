@@ -133,9 +133,17 @@ class ContactHelper:
         cell = row.find_elements_by_tag_name("td")[56]
         cell.find_element_by_tag_name("a").click()
 
-    def get_contact_info_from_edit_page(self, index):
-        wd = self.app.wd
+    def get_contact_from_edit_page_by_index(self, index):
         self.open_contact_to_edit_by_index(index)
+        return self.get_contact_from_edit_page()
+
+    def get_contact_from_edit_page_by_id(self, id):
+        self.app.open_home_page()
+        self.edit_contact_by_id(id)
+        return self.get_contact_from_edit_page()
+
+    def get_contact_from_edit_page(self):
+        wd = self.app.wd
         firstname = wd.find_element_by_name("firstname").get_attribute("value")
         lastname = wd.find_element_by_name("lastname").get_attribute("value")
         address = wd.find_element_by_name("address").get_attribute("value")
@@ -148,7 +156,6 @@ class ContactHelper:
         mobilephone = wd.find_element_by_name("mobile").get_attribute("value")
         secondaryphone = wd.find_element_by_name("phone2").get_attribute("value")
         homepage = wd.find_element_by_name("homepage").get_attribute("value")
-
         return Contact(first_name=firstname, last_name=lastname, mobile_phone=mobilephone, work_phone=workphone,
                        email=email1, address=address, homepage=homepage, id=id, home_phone=homephone,
                        secondary_phone=secondaryphone, email2=email2, email3=email3)
@@ -183,4 +190,3 @@ class ContactHelper:
         wd = self.app.wd
         self.app.open_home_page()
         Select(wd.find_element_by_name("group")).select_by_value(group.id)
-

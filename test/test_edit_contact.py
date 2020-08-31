@@ -1,18 +1,14 @@
-from random import randrange
-
-from fixture.string_utils import merge_emails_like_on_homepage
-from fixture.string_utils import merge_phones_like_on_homepage
-from fixture.string_utils import prepare_link
-
-
-def test_contact_on_edit_form(app):
-    contacts_count = app.contact.count()
-    index = randrange(contacts_count)
-    contact_from_home_page = app.contact.get_contact_list()[index]
-    contact_from_edit_page = app.contact.get_contact_info_from_edit_page(index)
-    assert contact_from_home_page.all_phones == merge_phones_like_on_homepage(contact_from_edit_page)
-    assert contact_from_home_page.all_emails == merge_emails_like_on_homepage(contact_from_edit_page)
-    assert contact_from_home_page.firstname == contact_from_edit_page.firstname
-    assert contact_from_home_page.lastname == contact_from_edit_page.lastname
-    assert contact_from_home_page.address == contact_from_edit_page.address
-    assert contact_from_home_page.homepage == prepare_link(contact_from_edit_page.homepage)
+def test_contact_on_edit_form(app, orm):
+    contacts_from_home_page = orm.get_contact_list()
+    for contact in contacts_from_home_page:
+        contact_from_edit_page = app.contact.get_contact_from_edit_page_by_id(contact.id)
+        assert contact.firstname == contact_from_edit_page.firstname
+        assert contact.lastname == contact_from_edit_page.lastname
+        assert contact.email == contact_from_edit_page.email
+        assert contact.email2 == contact_from_edit_page.email2
+        assert contact.email3 == contact_from_edit_page.email3
+        assert contact.mobile_phone == contact_from_edit_page.mobile_phone
+        assert contact.work_phone == contact_from_edit_page.work_phone
+        assert contact.secondary_phone == contact_from_edit_page.secondary_phone
+        assert contact.address == contact_from_edit_page.address
+        assert contact.homepage == contact_from_edit_page.homepage
