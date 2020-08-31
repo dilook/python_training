@@ -21,20 +21,28 @@ def test_delete_some_contact(app, db, check_ui):
 
 
 def test_remove_contact_from_group(app, check_ui, orm):
-    if len(orm.get_contact_list_with_group()) == 0:
-        if len(orm.get_group_list()) == 0:
-            app.group.create(Group(name="SuperGroup"))
-        if len(orm.get_contact_list()) == 0:
-            app.contact.add_new(Contact(title="Belong SuperGroup"))
+    if len(orm.get_group_list()) == 0:
+        app.group.create(Group(name="SuperGroup"))
+    if len(orm.get_contact_list()) == 0:
+        app.contact.add_new(Contact(title="Belong SuperGroup"))
+    (contact, group) = get_contact_in_group(orm)
+    if contact is None and group is None:
         contact = random.choice(orm.get_contact_list())
         group = random.choice(orm.get_group_list())
-    else:
-        contact = random.choice(orm.get_contact_list_with_group())
-        group = orm.get_groups_of_contact(contact)[0]
-    app.contact.add_contact_to_group(contact.id, group)
+        app.contact.add_contact_to_group(contact.id, group)
 
     app.contact.remove_contact_from_group(contact.id, group)
     assert contact in orm.get_contacts_not_in_group(group)
     if check_ui:
         app.contact.filter_by_group(group)
         assert contact not in app.contact.get_contact_list()
+
+
+def get_contact_in_group(orm):
+    for gr in orm.get_group_list():
+        contacts = orm.get_contacts_in_group(gr)
+        if len(contacts) > 0:
+            contact = contacts[0]
+            group = gr
+            return contact, group
+    return None, None
