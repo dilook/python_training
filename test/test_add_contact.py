@@ -22,8 +22,10 @@ def test_add_contact_to_group(app, check_ui, orm):
         app.group.create(Group(name="SuperGroup"))
     if len(orm.get_contact_list()) == 0:
         app.contact.add_new(Contact(title="Belong SuperGroup"))
-    contact = random.choice(orm.get_contact_list())
-    group = random.choice(orm.get_group_list())
+    (contact, group) = get_contact_not_in_group(orm)
+    if contact is None and group is None:
+        app.group.create(Group(name="SuperGroup"))
+    (contact, group) = get_contact_not_in_group(orm)
     app.contact.add_contact_to_group(contact.id, group)
     contacts = orm.get_contacts_in_group(group)
     assert contact in contacts
@@ -32,3 +34,13 @@ def test_add_contact_to_group(app, check_ui, orm):
         app.contact.filter_by_group(group)
         filtered_list = [c for c in app.contact.get_contact_list() if c.id == contact.id]
         assert filtered_list[0] in contacts
+
+
+def get_contact_not_in_group(orm):
+    for gr in orm.get_group_list():
+        contacts = orm.get_contacts_not_in_group(gr)
+        if len(contacts) > 0:
+            contact = contacts[0]
+            group = gr
+            return contact, group
+    return None, None
