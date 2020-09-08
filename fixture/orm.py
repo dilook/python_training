@@ -89,6 +89,8 @@ class ORMFixture:
 
 def convert_contact_to_model(contact):
     return Contact(id=str(contact.id),
-                   first_name=contact.firstname,
-                   last_name=contact.lastname
-                   )
+                   first_name=contact.firstname, last_name=contact.lastname,
+                   address=contact.address, homepage=contact.homepage,
+                   mobile_phone=contact.mobile, work_phone=contact.work, home_phone=contact.home,
+                   secondary_phone=contact.phone,
+                   email=contact.email, email2=contact.email2, email3=contact.email3)

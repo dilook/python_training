@@ -8,7 +8,8 @@ def clear(s):
 
 
 def prepare_link(link):
-    return link if link.startswith("http") or not link else f"http://{link}"
+    link_lo = link.lower()
+    return link_lo if link_lo.startswith("http") or not link_lo else f"http://{link_lo}"
 
 
 def merge_phones_like_on_homepage(contact):
