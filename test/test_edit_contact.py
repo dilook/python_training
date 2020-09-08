@@ -1,14 +1,17 @@
+from random import randrange
+
+from fixture.string_utils import merge_emails_like_on_homepage
+from fixture.string_utils import merge_phones_like_on_homepage
+from fixture.string_utils import prepare_link
+
+
 def test_contact_on_edit_form(app, orm):
-    contacts_from_home_page = orm.get_contact_list()
+    contacts_from_home_page = app.contact.get_contact_list()
     for contact in contacts_from_home_page:
-        contact_from_edit_page = app.contact.get_contact_from_edit_page_by_id(contact.id)
-        assert contact.firstname == contact_from_edit_page.firstname
-        assert contact.lastname == contact_from_edit_page.lastname
-        assert contact.email == contact_from_edit_page.email
-        assert contact.email2 == contact_from_edit_page.email2
-        assert contact.email3 == contact_from_edit_page.email3
-        assert contact.mobile_phone == contact_from_edit_page.mobile_phone
-        assert contact.work_phone == contact_from_edit_page.work_phone
-        assert contact.secondary_phone == contact_from_edit_page.secondary_phone
-        assert contact.address == contact_from_edit_page.address
-        assert contact.homepage == contact_from_edit_page.homepage
+        contact_from_db = orm.get_contact_by_id(contact.id)
+        assert contact.all_phones == merge_phones_like_on_homepage(contact_from_db)
+        assert contact.all_emails == merge_emails_like_on_homepage(contact_from_db)
+        assert contact.firstname == contact_from_db.firstname
+        assert contact.lastname == contact_from_db.lastname
+        assert contact.address == contact_from_db.address
+        assert contact.homepage == prepare_link(contact_from_db.homepage)

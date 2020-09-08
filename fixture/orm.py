@@ -56,13 +56,7 @@ class ORMFixture:
         return self.convert_contacts_to_model(select(c for c in ORMFixture.ORMContact if c.deprecated is None))
 
     def convert_contacts_to_model(self, contacts):
-        def convert(contact):
-            return Contact(id=str(contact.id), first_name=contact.firstname, last_name=contact.lastname,
-                           work_phone=contact.work, mobile_phone=contact.mobile, home_phone=contact.home,
-                           address=contact.address, secondary_phone=contact.phone,
-                           email=contact.email, email2=contact.email2, email3=contact.email3, homepage=contact.homepage)
-
-        return list(map(convert, contacts))
+        return list(map(convert_contact_to_model, contacts))
 
     @db_session
     def get_contacts_in_group(self, group):
@@ -86,3 +80,15 @@ class ORMFixture:
         return self.convert_groups_to_model(
             select(g for g in ORMFixture.ORMGroup if orm_contact in g.contacts)
         )
+
+    @db_session
+    def get_contact_by_id(self, id):
+        orm_contact = list(select(c for c in ORMFixture.ORMContact if id == c.id))[0]
+        return convert_contact_to_model(orm_contact)
+
+
+def convert_contact_to_model(contact):
+    return Contact(id=str(contact.id),
+                   first_name=contact.firstname,
+                   last_name=contact.lastname
+                   )
