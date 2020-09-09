@@ -1,4 +1,4 @@
-from fixture.string_utils import random_string
+from utils.string_utils import random_string
 from model.group import Group
 
 testdata = [Group(name="", header="", footer="")] + [

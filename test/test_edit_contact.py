@@ -1,6 +1,6 @@
-from fixture.string_utils import merge_emails_like_on_homepage
-from fixture.string_utils import merge_phones_like_on_homepage
-from fixture.string_utils import prepare_link
+from utils.string_utils import merge_emails_like_on_homepage
+from utils.string_utils import merge_phones_like_on_homepage
+from utils.string_utils import prepare_link
 from utils.db_utils import clean_contact_name
 
 

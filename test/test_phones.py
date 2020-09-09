@@ -1,4 +1,4 @@
-from fixture.string_utils import merge_phones_like_on_homepage
+from utils.string_utils import merge_phones_like_on_homepage
 
 
 def test_phones_on_home_page(app):

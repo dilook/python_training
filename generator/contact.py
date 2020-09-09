@@ -4,7 +4,7 @@ import sys
 
 import jsonpickle
 
-from fixture.string_utils import random_string, random_phone, random_site, random_email
+from utils.string_utils import random_string, random_phone, random_site, random_email
 from model.contact import Contact
 
 try:
