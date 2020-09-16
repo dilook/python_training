@@ -12,6 +12,10 @@ class Application:
     def __init__(self, browser, base_url):
         if browser == "firefox":
             self.wd = webdriver.Firefox(executable_path=GeckoDriverManager().install())
+        elif browser == "firefox_headless":
+            ff_opt = webdriver.FirefoxOptions()
+            ff_opt.headless = True
+            self.wd = webdriver.Firefox(executable_path=GeckoDriverManager().install(), firefox_options=ff_opt)
         elif browser == "chrome":
             self.wd = webdriver.Chrome(ChromeDriverManager().install())
         elif browser == "ie":
