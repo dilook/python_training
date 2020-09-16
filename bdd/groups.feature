@@ -1,4 +1,4 @@
-Scenario: Add new group
+Scenario: Add a new group
   Given a group list
   Given a group with <name>, <header> and <footer>
   When I add the group to the list

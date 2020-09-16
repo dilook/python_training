@@ -1,13 +1,17 @@
-from pytest_bdd import given
-
-from model.contact import Contact
-
-
-@given('a contact list')
-def contact_list(orm):
-    return orm.get_contact_list()
+from pytest_bdd import scenario
+from .contact_steps import *
 
 
-@given('a contact with <first name>, <last name>')
-def new_contact(first_name, last_name):
-    return Contact(first_name=first_name, last_name=last_name)
+@scenario("contacts.feature", "Add a new contact")
+def test_add_new_contact():
+    pass
+
+
+@scenario("contacts.feature", "Delete a contact")
+def test_delete_contact():
+    pass
+
+
+@scenario("contacts.feature", "Modify a contact")
+def test_modify_contact():
+    pass
